@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 import string
 import numpy as np
@@ -74,12 +75,13 @@ elif method == 'row':
     
 else:
     key = int(key)
-    text += '#' * (key - len(text) % key)
+    if len(text) % key > 0:
+        text += '#' * (key - (len(text) % key))
     lenText = len(text)
-    text = np.array(list(text)).reshape(key, lenText//key)
+    text = np.array(list(text)).reshape(lenText//key, key)
 
     ans = ''
-    for i in range(lenText//key):
+    for i in range(key):
         ans += ''.join(list(text[:,i]))
     print(ans.replace('#', ''))
     

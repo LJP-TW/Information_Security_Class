@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-
+import numpy as np
 import sys
 
 key = sys.argv[2].upper()
 p = sys.argv[3].lower()
 
-DEBUG = False
+DEBUG = 0
 
 if DEBUG:
     print(f'key : {key}')
@@ -91,22 +91,48 @@ elif sys.argv[1] == 'playfair':
             print(f'{{{table[y1][x1]}{table[y2][x2]}}}')
     print(cipher)
     
+elif sys.argv[1] == 'vernam':
+    lenKey = len(key)
+    lenP = len(p)
+    A = ord('A')
+    c = ''
+    p = p.replace(' ', '').upper()
 
+    if lenKey < lenP:
+        key = key + p[:lenP - lenKey]
+    
+    for x, y in zip(p, key):
+        c += chr(((ord(x) - A) ^ (ord(y) - A)) + A)
 
+    if DEBUG:
+        print(f'key : {key}')
 
+    print(c)
 
+elif sys.argv[1] == 'row':
+    if len(p) % len(key) > 0:
+        p += '#' * (len(key) - (len(p) % len(key)))
+    
+    p = np.array(list(p)).reshape(len(p) // len(key), len(key))
+    ans = ''
+    for i in range(1, len(key)+1):
+        index = key.find(chr(ord('0')+i))
+        ans += ''.join(p[:,index])
+    print(ans.replace('#',''))
 
+else:
+    if len(p) % int(key) > 0:
+        p += '#' * (int(key) - (len(p) % int(key)))
 
+    t = np.array(list(p)).reshape(int(key), len(p) // int(key))
 
+    if DEBUG:
+        print(t)
 
+    c = ''
+    for i in range(len(p) // int(key)):
+        c += ''.join(list(t[:,i]))
 
+    c = c.replace('#', '')
 
-
-
-
-
-
-
-
-
-
+    print(c)
