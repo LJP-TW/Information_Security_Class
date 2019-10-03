@@ -121,6 +121,10 @@ elif sys.argv[1] == 'row':
     print(ans.replace('#',''))
 
 else:
+    # I have to say sorry that I don't know how it works,
+    # cuz I just rewrite my code from my Leetcode problem 6 submission from c++ to python.
+    # and I have no idea how smart I am before.
+    # I will prove that this code is coded by myself by the picture below.
     key = int(key)
     n = (key - 1) * 2
     length = len(p)
