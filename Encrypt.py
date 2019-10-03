@@ -121,18 +121,15 @@ elif sys.argv[1] == 'row':
     print(ans.replace('#',''))
 
 else:
-    if len(p) % int(key) > 0:
-        p += '#' * (int(key) - (len(p) % int(key)))
-
-    t = np.array(list(p)).reshape(int(key), len(p) // int(key))
-
-    if DEBUG:
-        print(t)
-
-    c = ''
-    for i in range(len(p) // int(key)):
-        c += ''.join(list(t[:,i]))
-
-    c = c.replace('#', '')
-
-    print(c)
+    key = int(key)
+    n = (key - 1) * 2
+    length = len(p)
+    ans = ''
+    for i in range(key):
+        j = 0
+        while(i+j < length):
+            ans += p[i+j]
+            if(i != 0 and i != key-1 and -i + j + n < length):
+                ans += p[j - i + n]
+            j+=n
+    print(ans)
