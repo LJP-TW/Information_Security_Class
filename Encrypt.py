@@ -136,4 +136,4 @@ else:
             if(i != 0 and i != key-1 and -i + j + n < length):
                 ans += p[j - i + n]
             j+=n
-    print(ans)
+    print(ans.upper())
