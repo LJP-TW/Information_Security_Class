@@ -8,6 +8,8 @@ method = sys.argv[1].lower()
 key = sys.argv[2].lower()
 text = sys.argv[3].lower()
 
+DEBUG = 0
+
 if method == 'caesar':
     # Convert Key to Integer
     key = int(key)
@@ -100,13 +102,71 @@ elif method == 'row':
     
 else:
     key = int(key)
-    if len(text) % key > 0:
-        text += '#' * (key - (len(text) % key))
-    lenText = len(text)
-    text = np.array(list(text)).reshape(lenText//key, key)
 
-    ans = ''
-    for i in range(key):
-        ans += ''.join(list(text[:,i]))
-    print(ans.replace('#', ''))
-    
+    # How many chars that every row holds
+    charCounts = []
+
+    textlen = len(text)
+    textlen -= key
+
+    # key is too big, and the encryption will do nothing
+    # so decryption will also do nothing
+    if textlen <= 0:
+        print(text)
+        exit()
+
+    quotient = textlen // (key - 1)
+    remainder = textlen % (key - 1)
+
+    # setting charCounts
+    charCounts.append(1 + quotient // 2 + quotient % 2)
+    for i in range(key - 2):
+        charCounts.append(1 + quotient)
+    charCounts.append(1 + quotient // 2)
+
+    if DEBUG:
+        print(textlen)
+        print(quotient)
+        print(remainder)
+
+    if quotient % 2:
+        pos = 1
+        for i in range(remainder):
+            charCounts[pos] += 1
+            pos += 1
+    else:
+        pos = key - 2
+        for i in range(remainder):
+            charCounts[pos] += 1
+            pos -= 1
+    if DEBUG:
+        print(charCounts) 
+
+    textrows = [' '  for i in range(len(charCounts))]
+    pos = 0
+    for i, v in enumerate(charCounts):
+        textrows[i] += text[pos:pos + v]
+        pos += v
+
+    if DEBUG:
+        print('text ros:')
+        print(textrows)
+
+    c = ''
+    pos = 0 
+    direction = 1
+    while True:
+        if len(textrows[pos]) == 1:
+            break
+        
+        c += textrows[pos][1]
+        textrows[pos] = textrows[pos][1:]
+        
+        pos += direction
+
+        if pos == key - 1:
+            direction = -1
+        if pos == 0:
+            direction = 1
+
+    print(c)    
