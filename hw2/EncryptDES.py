@@ -3,9 +3,11 @@
 import sys
 import numpy as np
 
+# Get input and text in binary form
 key = bin(int(sys.argv[1], 16))[2:]
 text = bin(int(sys.argv[2], 16))[2:]
 
+# fill the zero
 key = '0' * (64 - len(key)) + key
 text = '0' * (64 - len(text)) + text 
 
@@ -28,21 +30,15 @@ Sbox.append(np.array([int(x) for x in ('13 2 8 4 6 15 11 1 10 9 3 14 5 0 12 7 1 
 LS = [1, 2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 0]
 #### end
 
+# convert input by table
 def convert(data, table):
-    newData = ''
-    for i in range(len(table)):
-        newData += data[table[i]]
-    return newData
+    return ''.join([data[table[i]] for i in range(len(table))])
 
+# xor for str in binary form
 def xor(s1, s2):
-    s = ''
-    for i in range(len(s1)):
-        if(s1[i] == s2[i]):
-            s += '0'
-        else:
-            s += '1'
-    return s
+    return ''.join(['0' if s1[i] == s2[i] else '1' for i in range(len(s1))])
 
+# get Ki
 def SubKey(K, i):
     C = K[0:28]
     D = K[28:]
@@ -50,6 +46,7 @@ def SubKey(K, i):
     D = D[LS[i]:] + D[:LS[i]]
     return convert(C + D, PC_2)
 
+# f function
 def foo(R, K):
     B = xor(convert(R, E), K)
     z = ''
@@ -62,6 +59,7 @@ def foo(R, K):
         z += out
     return convert(z, P)
 
+# start encrypt
 key = convert(key, PC_1)
 text = convert(text, IP)
 L = text[0:32]
@@ -69,17 +67,12 @@ R = text[32:]
 LN = ''
 RN = ''
 
+# for loop
 for i in range(16):
     LN = R
     RN = xor(L, foo(R, SubKey(key, i)))
     L = LN
     R = RN
 
-ans = hex(int(convert(R + L, IP_1), 2))[2:].upper()
-ans = '0x' + ans
-print(ans)
-
-
-
-
-
+# print answer in hex form
+print('0x' + hex(int(convert(R + L, IP_1), 2))[2:].upper())
