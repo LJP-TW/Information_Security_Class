@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# Remove this line and write it!
 import sys
 import numpy as np
 
