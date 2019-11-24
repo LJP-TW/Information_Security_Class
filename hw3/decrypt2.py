@@ -35,6 +35,16 @@ with open(inpath, 'r') as f:
                 pixels[w, h] = tuple(e[:3])
                 idx += 16
                 IV = c
+    elif mode == 'OFB':
+        IV = '0000111122223333'
+        for w in range(width):
+            for h in range(height):
+                k = cipher.encrypt(IV)
+                c = binary[idx:idx+16]
+                e = [ord(x) ^ ord(y) for x, y in zip(c, k)]
+                pixels[w, h] = tuple(e[:3])
+                idx += 16
+                IV = k
     else:
         print('Non-supported mode')
         exit()

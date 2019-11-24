@@ -35,6 +35,16 @@ elif mode == 'CBC':
             pixels[w, h] = tuple(c[:3])
             ciphertext += ''.join(chr(x) for x in c)
             IV = c
+elif mode == 'OFB':
+    IV = '0000111122223333'
+    for w in range(width):
+        for h in range(height):
+            k = cipher.encrypt(IV)
+            e = padding(list(pixels[w, h]))
+            c = [x ^ ord(y) for x, y in zip(e, k)]
+            pixels[w, h] = tuple(c[:3])
+            ciphertext += ''.join(chr(x) for x in c)
+            IV = k
 else:
     print('Non-supported mode')
     exit()
