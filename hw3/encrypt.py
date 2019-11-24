@@ -15,32 +15,32 @@ p.save('enc.bmp')
 ciphertext = ''
 
 with open("enc.bmp", "rb") as f:
-  f = f.read()
-  #ciphertext = cipher.encrypt(clear)
-  trimmed = f[64:-2]
+    f = f.read()
+    #ciphertext = cipher.encrypt(clear)
+    trimmed = f[64:-2]
 
-  paddingNum = 16 - (len(trimmed)%16)
-  if paddingNum > 0:
-  	trimmed = trimmed + '0' * paddingNum
-  
-  if mode == 'ECB':
-  	cipher = AES.new(key, AES.MODE_ECB)
-  	ciphertext = ''.join([cipher.encrypt(trimmed[index: index+16]) for index in range(0, len(trimmed), 16)])
-  
-  else:
-  	IV = '0000111122223333'
-  	for index in range(0, len(trimmed), 16):
-  		cipher = AES.new(key, AES.MODE_CBC, IV)
-  		IV = cipher.encrypt(trimmed[index: index+16])
-  		ciphertext = ciphertext + IV
+    paddingNum = 16 - (len(trimmed)%16)
+    if paddingNum > 0:
+        trimmed = trimmed + '0' * paddingNum
+    
+    if mode == 'ECB':
+        cipher = AES.new(key, AES.MODE_ECB)
+        ciphertext = ''.join([cipher.encrypt(trimmed[index: index+16]) for index in range(0, len(trimmed), 16)])
 
-  ciphertext = ciphertext[:len(ciphertext)-paddingNum]
-  ciphertext = f[0:64] + ciphertext + f[-2:]
+    else:
+        IV = '0000111122223333'
+        for index in range(0, len(trimmed), 16):
+            cipher = AES.new(key, AES.MODE_CBC, IV)
+            IV = cipher.encrypt(trimmed[index: index+16])
+            ciphertext = ciphertext + IV
+
+    ciphertext = ciphertext[:len(ciphertext)-paddingNum]
+    ciphertext = f[0:64] + ciphertext + f[-2:]
 
 
 
 with open("enc.bmp", "w") as f:
-  f.write(ciphertext)
+    f.write(ciphertext)
 
 
 print('finish')

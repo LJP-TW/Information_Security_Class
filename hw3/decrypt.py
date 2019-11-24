@@ -15,34 +15,34 @@ p.save('dec.bmp')
 ciphertext = ''
 
 with open("dec.bmp", "rb") as f:
-  f = f.read()
-  #ciphertext = cipher.encrypt(clear)
-  trimmed = f[64:-2]
+    f = f.read()
+    #ciphertext = cipher.encrypt(clear)
+    trimmed = f[64:-2]
 
-  paddingNum = 16 - (len(trimmed)%16)
-  if paddingNum > 0:
-  	trimmed = trimmed + '0' * paddingNum
-  
-  if mode == 'ECB':
-  	cipher = AES.new(key, AES.MODE_ECB)
-  	ciphertext = ''.join([cipher.decrypt(trimmed[index: index+16]) for index in range(0, len(trimmed), 16)])
-  else:
-  	IV = '0000111122223333'
-  	for index in range(16, len(trimmed), 16):
-  		cipher = AES.new(key, AES.MODE_CBC, trimmed[index-16: index])
-  		ciphertext = ciphertext + cipher.decrypt(trimmed[index: index+16])
-  		# ciphertext = ciphertext + IV
-  	
-  	cipher = AES.new(key, AES.MODE_CBC, IV)
-  	ciphertext =  cipher.decrypt(trimmed[0:16]) + ciphertext
+    paddingNum = 16 - (len(trimmed)%16)
+    if paddingNum > 0:
+        trimmed = trimmed + '0' * paddingNum
+    
+    if mode == 'ECB':
+        cipher = AES.new(key, AES.MODE_ECB)
+        ciphertext = ''.join([cipher.decrypt(trimmed[index: index+16]) for index in range(0, len(trimmed), 16)])
+    else:
+        IV = '0000111122223333'
+        for index in range(16, len(trimmed), 16):
+            cipher = AES.new(key, AES.MODE_CBC, trimmed[index-16: index])
+            ciphertext = ciphertext + cipher.decrypt(trimmed[index: index+16])
+            # ciphertext = ciphertext + IV
+        
+        cipher = AES.new(key, AES.MODE_CBC, IV)
+        ciphertext = cipher.decrypt(trimmed[0:16]) + ciphertext
 
-  ciphertext = ciphertext[:len(ciphertext)-paddingNum]
-  ciphertext = f[0:64] + ciphertext + f[-2:]
+    ciphertext = ciphertext[:len(ciphertext)-paddingNum]
+    ciphertext = f[0:64] + ciphertext + f[-2:]
 
 
 
 with open("dec.bmp", "w") as f:
-  f.write(ciphertext)
+    f.write(ciphertext)
 
 
 print('finish')
