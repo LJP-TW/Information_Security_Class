@@ -1,8 +1,11 @@
+
+# normal gcd
 def gcd(a,b):
     if(b == 0):
         return a
     return gcd(b, a%b)
 
+# extended gcd
 def ext_gcd(a,b):
     if(b == 0):
         return a, 1, 0

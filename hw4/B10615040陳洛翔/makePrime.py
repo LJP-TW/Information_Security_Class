@@ -2,19 +2,19 @@
 import random
 from random import randint
 
-
-def makeRandomNum(bits):  # w表示希望产生位数
+# make random binary number which its MSB and LSB are '1'
+def makeRandomNum(bits):  
     list = []
-    list.append('1')  #最高位定为1
+    list.append('1')
     for i in range(bits - 2):
         c = random.choice(['0', '1'])
         list.append(c)
-    list.append('1') # 最低位定为1
-    # print(list)
+    list.append('1')
     res = int(''.join(list),2)
     return res
 
-
+# square and multiply, 
+# x^n mod P = (x*x)^(n/2) mod P = ((x*x) mod P) ^ (n/2) mod P
 def bigMod(x, n, p):  # x^n mod P 递归求法 (x*x)^(n/2) mod P = ((x*x)mod P)^(n/2) mod P
     if n == 0:
         return 1
@@ -23,7 +23,8 @@ def bigMod(x, n, p):  # x^n mod P 递归求法 (x*x)^(n/2) mod P = ((x*x)mod P)^
         res = (res * (x)) % p # x是较小数，x%p的结果就是本身
     return res
 
-def MillerRabin(a, p):  # 优化点应该依旧不少，欢迎指正
+# Miller Rabin Test
+def MillerRabin(a, p):
     if bigMod(a, p - 1, p) == 1:
         u = (p-1) >> 1
         while (u & 1) == 0:
@@ -44,6 +45,7 @@ def MillerRabin(a, p):  # 优化点应该依旧不少，欢迎指正
     else:
         return False
 
+# Miller Rabin Test for k times
 def MillerRabinTest(p, k):  # k为测试次数，p为待测奇数
     while k > 0:
         a = randint(2, p - 1)
@@ -52,13 +54,16 @@ def MillerRabinTest(p, k):  # k为测试次数，p为待测奇数
         k = k - 1
     return True
 
-
-def makePrime(bits):           # 产生512位素数
+# make n bits prime number 
+def makePrime(bits):
     while 1:
+        # make n bits number
         d = makeRandomNum(bits)
-        for i in range(50):  # 伪素数附近50个奇数都没有真素数的话，重新再产生一个伪素数
+        for i in range(50):
+            # Miller Rabin Test d + 2*(i) for 5 times
             u = MillerRabinTest(d+2*(i), 5)
             if u:
+                # i get it
                 b = d + 2*(i)
                 break
             else:

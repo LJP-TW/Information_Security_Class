@@ -1,12 +1,12 @@
 from makePrime import makePrime, bigMod
 from gcd import gcd, ext_gcd
-# import time
-
 import sys
 sys.setrecursionlimit(1000000)
 
+# initial d = -1
 d = -1
 
+# do until d is > 0
 while (d < 0):
     print('find p')
     p = makePrime(1024)
@@ -21,12 +21,13 @@ while (d < 0):
 
     a, d, b = ext_gcd(e, r)
 
+# write publicKey(n,e) to text file
 with open('./publicKey.txt', 'wb') as f:
     f.write(str(n))
     f.write('\n')
     f.write(str(e))
 
-
+# write privateKey(n,d) to text file
 with open('./privateKey.txt', 'wb') as f:
     f.write(str(n))
     f.write('\n')
