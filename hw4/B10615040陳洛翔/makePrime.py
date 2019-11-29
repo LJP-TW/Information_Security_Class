@@ -15,12 +15,12 @@ def makeRandomNum(bits):
 
 # square and multiply, 
 # x^n mod P = (x*x)^(n/2) mod P = ((x*x) mod P) ^ (n/2) mod P
-def bigMod(x, n, p):  # x^n mod P 递归求法 (x*x)^(n/2) mod P = ((x*x)mod P)^(n/2) mod P
+def bigMod(x, n, p): 
     if n == 0:
         return 1
     res = bigMod((x * x) % p, n >> 1, p)
     if n & 1 != 0:
-        res = (res * (x)) % p # x是较小数，x%p的结果就是本身
+        res = (res * (x)) % p 
     return res
 
 # Miller Rabin Test
@@ -46,7 +46,7 @@ def MillerRabin(a, p):
         return False
 
 # Miller Rabin Test for k times
-def MillerRabinTest(p, k):  # k为测试次数，p为待测奇数
+def MillerRabinTest(p, k): 
     while k > 0:
         a = randint(2, p - 1)
         if not MillerRabin(a, p):
