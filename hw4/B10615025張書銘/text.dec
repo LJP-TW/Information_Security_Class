@@ -295,4 +295,3 @@ This simple serialization technique can handle lists and dictionaries, but seria
 
 See also pickle - the pickle module
 Contrary to JSON, pickle is a protocol which allows the serialization of arbitrarily complex Python objects. As such, it is specific to Python and cannot be used to communicate with applications written in other languages. It is also insecure by default: deserializing pickle data coming from an untrusted source can execute arbitrary code, if the data was crafted by a skilled attacker.
-                                                                       

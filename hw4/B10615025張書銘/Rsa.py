@@ -88,8 +88,13 @@ def EncryptRSA(p, n, key):
         blocksize *= 2
 
     # padding
-    if len(p) % blocksize != 0:
-        p = p + '0' * (blocksize - len(p) % blocksize)
+    remain = len(p) % blocksize
+    if remain != 0:
+        padding = blocksize - remain
+        p = p + '0' * padding
+
+    _c = pow(padding, key, n)
+    c.append(_c)
 
     for i in range(0, len(p), blocksize):
         _p = int(p[i:i+blocksize], 2)
@@ -198,13 +203,15 @@ if __name__ == '__main__':
                 c.append(int(line))
                 line = f.readline()
 
-        if args.P != None and args.Q != None:
+        if args.P != None and args.Q != None and args.E != None:
             p = DecryptRSA(c, args.n, args.key, args.P, args.Q, args.E)
         else:
             p = DecryptRSA(c, args.n, args.key)
 
+        padding, p = p[0], p[1:]
+
         with open(args.outputfile, 'w+') as f:
-            for _p in p:
+            for _p in p[:-1]:
                 # Convert int        to hex string
                 # Convert hex string to bytes
                 # Convert bytes      to strings
@@ -213,4 +220,12 @@ if __name__ == '__main__':
                 _p = bytes.fromhex(_p)
                 _p = _p.decode('utf-8')
                 f.write(_p)
+
+            _p = p[-1] >> padding
+            _p = hex(_p)[2:]
+            _p = '0' * (len(_p) % 2) + _p
+            _p = bytes.fromhex(_p)
+            _p = _p.decode('utf-8')
+            f.write(_p)
+
 
